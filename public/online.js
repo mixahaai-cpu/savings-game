@@ -290,22 +290,12 @@ function renderLobby(s) {
   box.insertAdjacentHTML("beforeend",
     `<a href="./howto.html" target="_blank" rel="noopener" style="display:inline-block;margin-bottom:10px;padding:7px 14px;border-radius:999px;background:var(--pink,#f8c7cf);color:var(--red,#d95d4e);font-weight:700;text-decoration:none">📘 ${STR.menuHow} — เปิดหน้าอธิบายเกม</a>`);
 
-  // เลือกรูปแบบการเล่น — หัวหน้าห้องกดสลับได้ คนอื่นเห็นเฉย ๆ
-  const modeBox = document.createElement("div");
-  modeBox.innerHTML = `<div><b>${STR.modeTitle}</b></div>`;
-  const modeRow = document.createElement("div");
-  modeRow.className = "opt-row";
-  [["class", STR.modeClass], ["turns", STR.modeTurns]].forEach(([m, label]) => {
-    const b = document.createElement("button");
-    b.textContent = label;
-    if (v.mode === m) b.classList.add("sel");
-    b.disabled = !isHost;
-    b.onclick = () => window.__sendAction({ type: "mode", mode: m });
-    modeRow.appendChild(b);
-  });
-  modeBox.appendChild(modeRow);
-  if (isClass) modeBox.insertAdjacentHTML("beforeend", `<div class="hint" style="margin-bottom:8px">${STR.modeClassHint}</div>`);
-  box.appendChild(modeBox);
+  // ห้องออนไลน์ = โหมด "ทั้งห้องพร้อมกัน" เสมอ (ทุกคนทอยพร้อมกัน รับได้ถึง 120 คน)
+  // ตัดปุ่มเลือกโหมดผลัดตาออกจากห้องออนไลน์ กันครูเผลอเลือกผิดแล้วช้า + รับได้แค่ 6 คน
+  // เผื่อห้องเก่าที่ค้างเป็นผลัดตา ให้หัวหน้าดันกลับเป็นทั้งห้องอัตโนมัติ
+  if (isHost && v.mode !== "class") window.__sendAction({ type: "mode", mode: "class" });
+  box.insertAdjacentHTML("beforeend",
+    `<div class="note good" style="margin-bottom:8px">🏫 <b>ทั้งห้องพร้อมกัน</b> — ทุกคนทอยลูกเต๋าพร้อมกันในรอบเดียว รับได้ถึง 120 คน (เหมาะเล่นทั้งชั้น)</div>`);
 
   const list = document.createElement("div");
   list.className = "roster";
