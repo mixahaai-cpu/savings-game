@@ -1,0 +1,12 @@
+# Render Blueprint — deploy เกม "วางแผนดี ชีวิตมีเงินเก็บ" เป็น Web Service ฟรี
+# วิธีใช้: push โฟลเดอร์นี้ขึ้น GitHub → render.com → New → Blueprint → เลือก repo นี้ → Apply
+# (หรือ New → Web Service → เลือก repo → Render จะอ่านไฟล์นี้ให้อัตโนมัติ)
+services:
+  - type: web
+    name: wangplandee-savings-game
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /
+    autoDeploy: true

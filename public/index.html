@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>วางแผนดี ชีวิตมีเงินเก็บ — เกมวางแผนการเงิน</title>
+<meta name="description" content="เกมกระดานวางแผนการเงินสำหรับ 2–6 คน เรียนรู้การออม เงินสำรองฉุกเฉิน และการลงทุน">
+<link rel="stylesheet" href="./style.css">
+<link rel="icon" href="./assets/favicon.webp" type="image/webp">
+</head>
+<body>
+
+<!-- หน้าเมนูหลัก -->
+<div id="menu-screen" class="screen" style="background-image:url(./assets/bg_menu.webp)">
+  <h1 class="logo-title" id="menu-title"></h1>
+  <div class="logo-sub" id="menu-sub"></div>
+  <div class="menu-buttons">
+    <button id="btn-continue" class="teal hidden"></button>
+    <button id="btn-new" class="primary"></button>
+    <button id="btn-online" class="teal"></button>
+    <button id="btn-how"></button>
+    <button id="btn-stats"></button>
+  </div>
+</div>
+
+<!-- หน้าล็อบบี้ออนไลน์ (online.js เป็นคนวาดเนื้อหา) -->
+<div id="online-screen" class="screen hidden">
+  <div class="card-panel" id="online-panel"></div>
+</div>
+
+<!-- โหมดทั้งห้อง (สไตล์ Kahoot) — online.js เป็นคนวาดเนื้อหา -->
+<div id="class-screen" class="screen hidden"></div>
+
+<!-- หน้าตั้งค่าเกม -->
+<div id="setup-screen" class="screen hidden">
+  <div class="card-panel" id="setup-panel"></div>
+</div>
+
+<!-- หน้าเกม -->
+<div id="game-screen" class="screen hidden">
+  <div class="topbar">
+    <span class="round-chip" id="round-chip"></span>
+    <div class="actions">
+      <button id="btn-ledger"></button>
+      <button id="btn-font" title="ขนาดตัวอักษร">ก±</button>
+      <button id="btn-sound" class="hidden" title="เปิด/ปิดเสียง"></button>
+      <button id="btn-stop" class="hidden"></button>
+      <button id="btn-restart" class="hidden"></button>
+      <button id="btn-claim" class="hidden">🆘</button>
+      <button id="btn-menu"></button>
+    </div>
+  </div>
+  <div class="game-layout">
+    <div class="board" id="board"></div>
+    <div class="side-panel" id="players-panel"></div>
+  </div>
+</div>
+
+<!-- หน้าจบเกม -->
+<div id="end-screen" class="screen hidden" style="background-image:url(./assets/bg_win.webp)">
+  <h1 class="logo-title" id="end-title"></h1>
+  <div class="logo-sub" id="end-sub"></div>
+  <div class="hint" id="end-meta" style="background:#fffdf6cc;padding:4px 12px;border-radius:999px"></div>
+  <div class="rank-list" id="rank-list"></div>
+  <div class="menu-buttons">
+    <button id="end-again" class="primary"></button>
+    <button id="end-ledger"></button>
+    <button id="end-stats" class="hidden"></button>
+    <button id="end-csv"></button>
+    <button id="end-menu"></button>
+  </div>
+</div>
+
+<div id="dev-overlay"><div class="dev-state"></div><button id="dev-skip">จบเกมเร็ว</button> <button id="dev-rich">เงิน+</button></div>
+
+<script type="module" src="./game.js"></script>
+</body>
+</html>

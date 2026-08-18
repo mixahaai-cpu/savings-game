@@ -1,0 +1,419 @@
+/* วางแผนดี ชีวิตมีเงินเก็บ — โทนสีตาม STYLE FORMULA:
+   ครีม/พาสเทลเขียว-ฟ้า, เส้นขอบน้ำตาลอ่อน, ทองสำหรับเงิน, ตัวเน้น coral/mustard/teal */
+:root {
+  --cream: #fdf6e6;
+  --cream-2: #fbeecb;
+  --brown: #7a5c43;
+  --brown-soft: #a9866a;
+  --ink: #4a3626;
+  --gold: #f5b841;
+  --gold-deep: #d99a1b;
+  --coral: #ff7a59;
+  --mustard: #f2b705;
+  --teal: #1fa7a0;
+  --leaf: #6bbf59;
+  --sky: #bfe0f5;
+  --pink: #f8c7cf;
+  --red: #d95d4e;
+  --green-ok: #3f9d55;
+  --radius: 14px;
+  --fs: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; }
+body {
+  font-family: "Noto Sans Thai", "Leelawadee UI", "Sarabun", "Thonburi", system-ui, sans-serif;
+  font-size: var(--fs);
+  background: var(--cream);
+  color: var(--ink);
+  overflow-x: hidden;
+}
+body.fs-lg { --fs: 18px; }
+body.fs-xl { --fs: 20px; }
+button {
+  font-family: inherit; font-size: 1em; border: none; cursor: pointer;
+  border-radius: var(--radius); padding: 10px 18px; font-weight: 700;
+  background: var(--cream-2); color: var(--ink);
+  border: 2px solid var(--brown-soft);
+  box-shadow: 0 3px 0 rgba(122, 92, 67, .35);
+  transition: transform .08s, box-shadow .08s;
+  touch-action: manipulation;
+}
+button:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(122,92,67,.35); }
+button.primary { background: var(--gold); border-color: var(--gold-deep); color: #4a3200; }
+button.teal { background: var(--teal); border-color: #157873; color: #fff; }
+button.ghost { background: transparent; box-shadow: none; border-color: transparent; text-decoration: underline; }
+button:disabled { opacity: .45; cursor: default; }
+.screen { min-height: 100dvh; display: flex; flex-direction: column; align-items: center; }
+.hidden { display: none !important; }
+
+/* ---------- หน้าเมนู ---------- */
+#menu-screen, #end-screen {
+  justify-content: center; gap: 14px; padding: 24px 16px;
+  background-size: cover; background-position: center;
+  position: relative;
+}
+#menu-screen::before, #end-screen::before {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(rgba(253,246,230,.55), rgba(253,246,230,.88));
+}
+#menu-screen > *, #end-screen > * { position: relative; z-index: 1; }
+.logo-title {
+  font-size: 2em; font-weight: 900; color: var(--brown);
+  text-align: center; line-height: 1.25;
+  text-shadow: 0 2px 0 #fff8;
+}
+.logo-title .accent { color: var(--teal); display: block; font-size: 1.15em; }
+.logo-sub {
+  background: var(--cream-2); border: 2px solid var(--brown-soft);
+  padding: 6px 18px; border-radius: 999px; font-weight: 600; text-align: center;
+}
+.menu-buttons { display: flex; flex-direction: column; gap: 12px; width: min(320px, 88vw); margin-top: 8px; }
+.menu-buttons button { font-size: 1.1em; padding: 14px; }
+
+/* ---------- หน้าตั้งค่า ---------- */
+#setup-screen { padding: 24px 16px; gap: 16px; }
+.card-panel {
+  background: #fffdf6; border: 2px solid var(--brown-soft); border-radius: var(--radius);
+  padding: 18px; width: min(560px, 94vw); box-shadow: 0 6px 16px rgba(122,92,67,.15);
+}
+.card-panel h2 { color: var(--brown); margin-bottom: 12px; }
+.opt-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0 16px; }
+.opt-row button.sel { background: var(--gold); border-color: var(--gold-deep); }
+.name-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.name-row .dot { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--brown); flex: none; }
+.name-row input {
+  flex: 1; font-family: inherit; font-size: 1em; padding: 8px 12px;
+  border: 2px solid var(--brown-soft); border-radius: 10px; background: var(--cream);
+}
+.hint { color: var(--brown-soft); font-size: .9em; }
+
+/* ---------- หน้าเกม ---------- */
+#game-screen { padding: 8px; gap: 8px; }
+.topbar {
+  width: 100%; max-width: 1080px; display: flex; align-items: center; gap: 8px;
+  justify-content: space-between; flex-wrap: wrap;
+}
+.topbar .round-chip {
+  background: var(--brown); color: #fff; padding: 6px 14px; border-radius: 999px; font-weight: 700;
+}
+.topbar .actions { display: flex; gap: 6px; }
+.topbar .actions button { padding: 6px 12px; font-size: .95em; }
+
+.game-layout { display: flex; gap: 10px; width: 100%; max-width: 1080px; align-items: stretch; }
+@media (max-width: 860px) { .game-layout { flex-direction: column; } }
+
+/* บอร์ด 8 คอลัมน์ × 6 แถว */
+.board {
+  display: grid; flex: 1.6;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  gap: 4px; aspect-ratio: 8 / 6.4; min-width: 0;
+}
+.cell {
+  border: 2px solid var(--brown-soft); border-radius: 10px;
+  padding: 3px 4px; display: flex; flex-direction: column; align-items: center;
+  justify-content: flex-start; gap: 1px; text-align: center;
+  background: #fffdf6; position: relative; min-width: 0; overflow: hidden;
+}
+.cell .num { font-size: .62em; font-weight: 800; color: var(--brown-soft); align-self: flex-start; line-height: 1; }
+.cell .icon { font-size: clamp(13px, 2.6vw, 22px); line-height: 1.1; }
+.cell .nm { font-size: clamp(8px, 1.15vw, 11.5px); font-weight: 700; line-height: 1.15; }
+.cell .amt { font-size: clamp(8px, 1.05vw, 11px); font-weight: 800; }
+.cell .amt.pos { color: var(--green-ok); }
+.cell .amt.neg { color: var(--red); }
+.cell.active { outline: 3px solid var(--gold); outline-offset: 1px; z-index: 2; box-shadow: 0 0 12px var(--gold); }
+.cell.t-start   { background: #d7f0d0; }
+.cell.t-income  { background: #e2f3d8; }
+.cell.t-save    { background: #fbdfe4; }
+.cell.t-invest  { background: #dff0e9; }
+.cell.t-event   { background: #e8e0f5; }
+.cell.t-quiz    { background: #dcebfa; }
+.cell.t-expense { background: #fbe7d4; }
+.cell.t-chance  { background: #fdf3cd; }
+.cell.t-shield  { background: #d8efee; }
+.cell.decor { border-style: dashed; background: var(--cream-2); justify-content: center; font-size: 1.6em; }
+
+/* เลเยอร์ตัวเดิน — วางทับบอร์ดแบบ absolute เพื่ออนิเมชันเลื่อน + เด้งทีละช่อง */
+.board { position: relative; }
+.pawn-layer { position: absolute; inset: 0; pointer-events: none; z-index: 6; }
+.pawn {
+  position: absolute;
+  width: clamp(11px, 1.6vw, 16px); height: clamp(11px, 1.6vw, 16px);
+  border-radius: 50%;
+  border: 2px solid #fff; box-shadow: 0 2px 3px rgba(0,0,0,.4);
+  transition: left .22s ease, top .22s ease;
+}
+.pawn.me-turn { box-shadow: 0 0 0 3px var(--gold), 0 2px 4px rgba(0,0,0,.4); z-index: 2; }
+.pawn.hop { animation: hop .24s ease-out; }
+/* ตัวหมากปริศนาสีดำ (NPC) */
+.pawn.black-pawn {
+  background: #1c1c1c !important; border-color: #fff;
+  width: clamp(14px, 2.1vw, 20px); height: clamp(14px, 2.1vw, 20px);
+  box-shadow: 0 0 6px 2px rgba(0,0,0,.55); z-index: 3;
+  animation: blackpulse 1.6s ease-in-out infinite;
+}
+@keyframes blackpulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.18)} }
+.card-face.black-card { background: linear-gradient(160deg, #3a3a3a, #191919); color: #fff; border-color: #000; }
+.card-face.black-card .desc { color: #ddd; }
+.lb-item.black-bad { background: #f5c1b6; }
+@keyframes hop {
+  0% { transform: translateY(0) scale(1); }
+  45% { transform: translateY(-9px) scale(1.25); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+/* กลางบอร์ด */
+.board-center {
+  grid-row: 2 / 6; grid-column: 2 / 8;
+  border-radius: 12px; border: 2px solid var(--brown-soft);
+  background-size: cover; background-position: center;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+  position: relative; overflow: hidden; padding: 8px;
+}
+.board-center::before { content: ""; position: absolute; inset: 0; background: linear-gradient(rgba(253,246,230,0) 30%, rgba(253,246,230,.9)); }
+.center-ui { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; width: 100%; }
+.turn-label { font-weight: 900; font-size: clamp(14px, 2vw, 20px); color: var(--brown); background: #fffdf6cc; padding: 2px 14px; border-radius: 999px; }
+.dice {
+  width: clamp(44px, 6vw, 64px); height: clamp(44px, 6vw, 64px);
+  background: #fff; border: 3px solid var(--brown); border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: clamp(24px, 3.6vw, 38px); font-weight: 900; color: var(--brown);
+  box-shadow: 0 4px 0 rgba(122,92,67,.3);
+}
+.dice.rolling { animation: shake .45s infinite; }
+@keyframes shake { 0%,100%{transform:rotate(0)} 25%{transform:rotate(-14deg) translateY(-3px)} 75%{transform:rotate(12deg) translateY(2px)} }
+.dice.landed { animation: diceland .32s ease-out; }
+@keyframes diceland { 0%{transform:scale(1.5)} 60%{transform:scale(.92)} 100%{transform:scale(1)} }
+#roll-btn { font-size: clamp(14px, 1.8vw, 18px); padding: 10px 26px; }
+
+/* แผงผู้เล่น */
+.side-panel { flex: 1; display: flex; flex-direction: column; gap: 8px; min-width: 250px; }
+.player-card {
+  border: 2px solid var(--brown-soft); border-radius: 12px; background: #fffdf6;
+  padding: 8px 12px; display: flex; flex-direction: column; gap: 2px;
+}
+.player-card.current { border-color: var(--gold-deep); box-shadow: 0 0 0 3px var(--gold); }
+.player-card .row1 { display: flex; align-items: center; gap: 8px; font-weight: 800; }
+.player-card .row1 .dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--brown); flex: none; }
+.player-card .badges { margin-left: auto; font-size: .95em; }
+.money-row { display: flex; gap: 10px; font-size: .92em; flex-wrap: wrap; }
+.money-row .cash::before { content: "💵 "; }
+.money-row .sav::before { content: "🐷 "; }
+.money-row .debt::before { content: "⛓️ "; }
+.money-row .sav { color: var(--green-ok); font-weight: 800; }
+.money-row .debt { color: var(--red); font-weight: 800; }
+
+/* ---------- โมดัล ---------- */
+#modal-overlay {
+  position: fixed; inset: 0; background: rgba(74, 54, 38, .5);
+  display: flex; align-items: center; justify-content: center; z-index: 50; padding: 14px;
+}
+.modal {
+  background: #fffdf6; border: 3px solid var(--brown); border-radius: 18px;
+  width: min(520px, 96vw); max-height: 88dvh; overflow-y: auto;
+  padding: 20px; display: flex; flex-direction: column; gap: 12px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.35);
+  animation: pop .18s ease-out;
+}
+@keyframes pop { from { transform: scale(.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.modal h3 { color: var(--brown); font-size: 1.25em; display: flex; align-items: center; gap: 8px; }
+.modal .big-icon { font-size: 2.6em; text-align: center; }
+.modal .desc { line-height: 1.55; }
+.modal .note { background: var(--cream-2); border-radius: 10px; padding: 10px 12px; font-size: .95em; line-height: 1.5; }
+.modal .note.good { background: #e2f3d8; }
+.modal .note.bad { background: #fbe0d4; }
+.modal .btns { display: flex; flex-direction: column; gap: 8px; }
+.modal .btns.horiz { flex-direction: row; flex-wrap: wrap; }
+.modal .btns.horiz button { flex: 1; min-width: 120px; }
+.amount-line { font-size: 1.5em; font-weight: 900; text-align: center; }
+.amount-line.pos { color: var(--green-ok); }
+.amount-line.neg { color: var(--red); }
+.card-face {
+  border: 3px solid var(--brown); border-radius: 14px; padding: 14px; text-align: center;
+  background: linear-gradient(160deg, #fff, var(--cream-2));
+}
+.quiz-choices { display: flex; flex-direction: column; gap: 8px; }
+.quiz-choices button { text-align: left; }
+.quiz-choices button.correct { background: #bfe3b2; border-color: var(--green-ok); }
+.quiz-choices button.wrong { background: #f5c1b6; border-color: var(--red); }
+
+/* ---------- สมุดบัญชี ---------- */
+.ledger-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+.ledger-tabs button { padding: 5px 12px; font-size: .92em; }
+.ledger-tabs button.sel { background: var(--gold); }
+.ledger-wrap { overflow-x: auto; max-height: 46dvh; overflow-y: auto; border: 2px solid var(--brown-soft); border-radius: 10px; }
+table.ledger { border-collapse: collapse; width: 100%; font-size: .88em; }
+table.ledger th, table.ledger td { border-bottom: 1px solid #e8dcc8; padding: 5px 8px; text-align: right; white-space: nowrap; }
+table.ledger th { position: sticky; top: 0; background: var(--cream-2); color: var(--brown); }
+table.ledger td.item { text-align: left; white-space: normal; min-width: 130px; }
+td.pos { color: var(--green-ok); font-weight: 700; }
+td.neg { color: var(--red); font-weight: 700; }
+
+/* ---------- จบเกม / สถิติ ---------- */
+.rank-list { display: flex; flex-direction: column; gap: 8px; width: min(520px, 94vw); }
+.rank-item {
+  display: flex; align-items: center; gap: 10px; background: #fffdf6;
+  border: 2px solid var(--brown-soft); border-radius: 12px; padding: 10px 14px;
+}
+.rank-item.first { border-color: var(--gold-deep); background: #fff6dd; box-shadow: 0 0 0 3px var(--gold); }
+.rank-item .medal { font-size: 1.5em; }
+.rank-item .who { font-weight: 800; flex: 1; }
+.rank-item .sum { text-align: right; font-size: .92em; }
+.history-list { display: flex; flex-direction: column; gap: 6px; max-height: 40dvh; overflow-y: auto; }
+.history-item { background: var(--cream-2); border-radius: 10px; padding: 8px 12px; font-size: .95em; }
+
+.toast {
+  position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
+  background: var(--brown); color: #fff; padding: 8px 18px; border-radius: 999px;
+  z-index: 90; font-weight: 600; opacity: 0; transition: opacity .3s; pointer-events: none;
+  max-width: 92vw; text-align: center;
+}
+.toast.show { opacity: 1; }
+
+/* ---------- การ์ดเปิดแบบพลิก ---------- */
+.card-face.flip-in { animation: flipin .4s ease-out; }
+@keyframes flipin {
+  0% { transform: perspective(500px) rotateY(90deg); opacity: 0; }
+  100% { transform: perspective(500px) rotateY(0); opacity: 1; }
+}
+
+/* ---------- โหมดออนไลน์: ล็อบบี้ ---------- */
+#online-screen { padding: 24px 16px; justify-content: center; }
+.share-box {
+  background: var(--cream-2); border: 2px dashed var(--brown-soft); border-radius: 12px;
+  padding: 12px; margin: 12px 0; display: flex; flex-direction: column; gap: 8px;
+}
+.share-box input {
+  font-family: inherit; font-size: .9em; padding: 8px 10px; width: 100%;
+  border: 2px solid var(--brown-soft); border-radius: 10px; background: #fffdf6; color: var(--brown);
+}
+/* QR code เข้าห้อง */
+.qr-box {
+  width: min(200px, 60vw); aspect-ratio: 1; margin: 4px auto; padding: 8px;
+  background: #fff; border: 2px solid var(--brown-soft); border-radius: 12px;
+}
+.qr-box svg { display: block; width: 100%; height: 100%; }
+.modal.qr-modal { align-items: center; }
+.qr-big {
+  width: min(72vh, 88vw); aspect-ratio: 1; background: #fff; padding: 12px;
+  border-radius: 12px; border: 3px solid var(--brown);
+}
+.qr-big svg { display: block; width: 100%; height: 100%; }
+.qr-code-text { font-size: 1.3em; text-align: center; }
+.qr-code-text b { color: var(--teal); letter-spacing: 2px; font-size: 1.2em; }
+
+.roster { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.roster-item {
+  display: flex; align-items: center; gap: 8px; background: #fffdf6;
+  border: 2px solid var(--brown-soft); border-radius: 10px; padding: 8px 12px;
+}
+.roster-item .dot { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--brown); flex: none; }
+.roster-item .roster-tools { margin-left: auto; display: flex; gap: 6px; }
+.roster-item .roster-tools button { padding: 4px 10px; font-size: .95em; }
+#online-panel .note { background: var(--cream-2); border-radius: 10px; padding: 10px 12px; }
+
+/* ---------- โหมดออนไลน์: แบนเนอร์เหตุการณ์ + รอตัดสินใจ ---------- */
+#last-banner {
+  position: fixed; top: 52px; left: 50%; transform: translate(-50%, -12px);
+  background: #fffdf6; border: 2px solid var(--brown); border-radius: 14px;
+  padding: 10px 16px; z-index: 40; width: min(480px, 94vw);
+  box-shadow: 0 8px 24px rgba(74,54,38,.3);
+  opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s;
+  font-size: .95em; line-height: 1.5;
+}
+#last-banner.show { opacity: 1; transform: translate(-50%, 0); }
+#last-banner .lb-who { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
+#last-banner .lb-who .dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--brown); }
+#last-banner .lb-card { background: var(--cream-2); border-radius: 8px; padding: 4px 8px; margin: 4px 0; }
+.lb-quiz { background: #dcebfa; border-radius: 8px; padding: 6px 10px; margin-top: 4px; }
+
+/* รายการผลในป๊อปอัปเหตุการณ์ (โหมดทั้งห้อง) */
+.evt-items { display: flex; flex-direction: column; gap: 4px; margin: 4px 0; }
+.evt-items .lb-item { background: var(--cream-2); border-radius: 8px; padding: 5px 10px; font-size: .96em; }
+
+#pending-overlay.as-modal {
+  position: fixed; inset: 0; background: rgba(74, 54, 38, .5);
+  display: flex; align-items: center; justify-content: center; z-index: 50; padding: 14px;
+}
+#pending-overlay.as-strip {
+  position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
+  z-index: 45; width: min(480px, 94vw);
+}
+.pending-strip {
+  background: #fffdf6; border: 2px solid var(--brown-soft); border-radius: 12px;
+  padding: 10px 14px; font-weight: 600; box-shadow: 0 6px 18px rgba(74,54,38,.25);
+  font-size: .95em;
+}
+
+/* ---------- โหมดทั้งห้อง (สไตล์ Kahoot) ---------- */
+#class-screen { padding: 10px; align-items: stretch; }
+.cls-wrap { width: min(560px, 100%); margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+.cls-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.cls-top .round-chip { background: var(--brown); color: #fff; padding: 6px 14px; border-radius: 999px; font-weight: 700; }
+.cls-stage { font-weight: 900; color: var(--brown); flex: 1; }
+#cls-leave { padding: 6px 12px; font-size: .9em; }
+.cls-timerwrap { display: flex; flex-direction: column; align-items: center; gap: 3px; margin: 2px 0; }
+.cls-timebig { font-weight: 900; color: var(--brown); font-size: clamp(20px, 5vw, 30px); line-height: 1; }
+.cls-timebig #cls-timenum { font-size: 1.4em; color: var(--gold-deep); }
+.cls-timebig .u { font-size: .6em; color: var(--brown-soft); }
+.cls-timebar { width: 100%; height: 14px; background: var(--cream-2); border: 2px solid var(--brown-soft); border-radius: 999px; overflow: hidden; }
+#cls-timebar-fill { height: 100%; background: linear-gradient(90deg, var(--teal), var(--gold)); width: 100%; transition: width .2s linear; border-radius: 999px; }
+.cls-card {
+  background: #fffdf6; border: 2px solid var(--brown-soft); border-radius: 14px;
+  padding: 12px 14px; display: flex; flex-direction: column; gap: 6px;
+}
+/* กระดานเศรษฐีบนมือถือนักเรียน (โหมดทั้งห้อง) */
+.cls-board-visual { width: 100%; max-width: 100%; margin: 2px auto 0; }
+.cls-cturn { font-weight: 900; color: var(--brown); background: #fffdf6cc; padding: 2px 12px; border-radius: 999px; font-size: clamp(11px, 2.8vw, 15px); text-align: center; }
+.cls-cdice {
+  width: clamp(46px, 13vw, 62px); height: clamp(46px, 13vw, 62px);
+  font-size: clamp(24px, 7vw, 36px);
+}
+.cls-croll { font-size: clamp(14px, 4.2vw, 19px); padding: 12px 22px; }
+
+.cls-dicezone { align-items: center; }
+.cls-dicezone.small { flex-direction: row; justify-content: center; gap: 12px; }
+.cls-dice {
+  width: 72px; height: 72px; background: #fff; border: 3px solid var(--brown); border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 40px; font-weight: 900; color: var(--brown);
+  box-shadow: 0 4px 0 rgba(122,92,67,.3);
+}
+.cls-dicezone.small .cls-dice { width: 48px; height: 48px; font-size: 26px; }
+.cls-dice.landed { animation: diceland .32s ease-out; }
+.cls-rollbtn { font-size: 1.35em; padding: 18px 34px; width: 100%; }
+.cls-pos .cls-cell { display: flex; flex-direction: column; gap: 2px; }
+.cls-cicon { font-size: 1.8em; }
+.cls-money { flex-direction: row; gap: 14px; font-size: 1.15em; font-weight: 800; flex-wrap: wrap; }
+.cls-money .cash::before { content: "💵 "; }
+.cls-money .sav::before { content: "🐷 "; }
+.cls-money .sav { color: var(--green-ok); }
+.cls-money .debt::before { content: "⛓️ "; }
+.cls-money .debt { color: var(--red); }
+.cls-board { display: flex; flex-direction: column; gap: 4px; max-height: 46dvh; overflow-y: auto; }
+.mon-rank { max-height: 60dvh; }
+.mon-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px; font-weight: 700; font-size: .95em; }
+.mon-stats > div { background: var(--cream-2); border-radius: 8px; padding: 4px 8px; }
+.mon-rank .cls-bname .hint { font-weight: 400; }
+.cls-brow { display: flex; align-items: center; gap: 8px; padding: 5px 8px; border-radius: 8px; background: var(--cream-2); }
+.cls-brow.top { background: #fff6dd; }
+.cls-brow.meline { outline: 2px solid var(--gold-deep); }
+.cls-brow .dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--brown); flex: none; }
+.cls-medal { width: 1.6em; text-align: center; font-weight: 800; }
+.cls-bname { flex: 1; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cls-bsum { font-size: .92em; font-weight: 800; }
+.cls-result .lb-item { padding: 1px 0; }
+.cls-hist { display: flex; flex-direction: column; gap: 3px; max-height: 30dvh; overflow-y: auto; font-size: .92em; }
+.cls-hrow { display: flex; gap: 6px; padding: 3px 6px; background: var(--cream-2); border-radius: 6px; }
+.cls-hrow .pos { color: var(--green-ok); font-weight: 700; margin-left: auto; }
+.cls-hrow .neg { color: var(--red); font-weight: 700; margin-left: auto; }
+.cls-hrow span.hint { flex: none; }
+#cls-hist-toggle { text-align: left; padding: 2px 0; }
+.rank-list { max-height: 52dvh; overflow-y: auto; }
+
+#dev-overlay {
+  position: fixed; top: 4px; left: 4px; z-index: 99; background: #000c; color: #0f0;
+  font: 11px monospace; padding: 6px; border-radius: 6px; max-width: 46vw; display: none;
+}
+#dev-overlay button { font-size: 11px; padding: 2px 6px; margin-top: 4px; }
