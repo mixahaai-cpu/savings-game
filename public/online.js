@@ -286,6 +286,10 @@ function renderLobby(s) {
   const box = $("#ol-lobby");
   box.innerHTML = "";
 
+  // ลิงก์หน้าอธิบายเกม (เปิดแท็บใหม่) — ครู/นักเรียนอ่านวิธีเล่นก่อนเริ่ม
+  box.insertAdjacentHTML("beforeend",
+    `<a href="./howto.html" target="_blank" rel="noopener" style="display:inline-block;margin-bottom:10px;padding:7px 14px;border-radius:999px;background:var(--pink,#f8c7cf);color:var(--red,#d95d4e);font-weight:700;text-decoration:none">📘 ${STR.menuHow} — เปิดหน้าอธิบายเกม</a>`);
+
   // เลือกรูปแบบการเล่น — หัวหน้าห้องกดสลับได้ คนอื่นเห็นเฉย ๆ
   const modeBox = document.createElement("div");
   modeBox.innerHTML = `<div><b>${STR.modeTitle}</b></div>`;

@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>วิธีเล่น — วางแผนดี ชีวิตมีเงินเก็บ</title>
+<style>
+  :root{
+    --cream:#fdf6e6; --cream2:#fbeecb; --brown:#7a5c43; --ink:#4a3626;
+    --gold:#f5b841; --gold-deep:#d99a1b; --coral:#ff7a59; --teal:#1fa7a0;
+    --leaf:#6bbf59; --sky:#bfe0f5; --pink:#f8c7cf; --red:#d95d4e;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:"Segoe UI","Sarabun","Noto Sans Thai",system-ui,sans-serif;
+    color:var(--ink); line-height:1.55;
+    background:radial-gradient(circle at 20% 0%,#fff7e0,#fdf1d6 40%,#f7e7c4 100%);
+    padding:clamp(16px,3vw,40px);
+  }
+  .wrap{max-width:1080px; margin:0 auto}
+  header{text-align:center; margin-bottom:28px}
+  .badge{display:inline-block; background:var(--pink); color:var(--red); font-weight:800;
+    padding:5px 16px; border-radius:999px; font-size:clamp(13px,1.6vw,16px); letter-spacing:.3px}
+  h1{font-size:clamp(28px,5vw,48px); margin:12px 0 6px; color:var(--brown)}
+  .goal{font-size:clamp(16px,2.4vw,22px); background:#fff; border:3px dashed var(--gold);
+    border-radius:18px; padding:14px 20px; display:inline-block; margin-top:8px; max-width:820px}
+  .goal b{color:var(--gold-deep)}
+  section{background:#fffdf6; border-radius:20px; padding:clamp(16px,2.5vw,28px);
+    margin:20px 0; box-shadow:0 6px 20px rgba(122,92,67,.12); border:1px solid #f0e2c4}
+  h2{font-size:clamp(20px,3vw,30px); margin:0 0 16px; display:flex; align-items:center; gap:10px; color:var(--brown)}
+  h2 .n{background:var(--teal); color:#fff; width:1.6em; height:1.6em; border-radius:50%;
+    display:grid; place-items:center; font-size:.8em; flex:0 0 auto}
+  .steps{display:grid; gap:14px; grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  .step{background:var(--cream); border-radius:16px; padding:16px 18px; border-left:6px solid var(--coral)}
+  .step .big{font-size:clamp(30px,5vw,42px)}
+  .step h3{margin:6px 0 4px; font-size:clamp(17px,2.2vw,21px)}
+  .step p{margin:0; font-size:clamp(14px,1.8vw,17px); color:#6a533f}
+  .modes{display:grid; gap:16px; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); margin-top:6px}
+  .mode{border-radius:16px; padding:18px; font-size:clamp(14px,1.9vw,18px)}
+  .mode.a{background:#e2f3d8; border:2px solid var(--leaf)}
+  .mode.b{background:#dfeffb; border:2px solid var(--sky)}
+  .mode h3{margin:0 0 8px; font-size:clamp(18px,2.4vw,22px)}
+  .cells{display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+  .cell{display:flex; gap:12px; align-items:flex-start; background:var(--cream); border-radius:14px; padding:12px 14px}
+  .cell .ic{font-size:clamp(26px,4vw,34px); line-height:1; flex:0 0 auto}
+  .cell b{font-size:clamp(15px,2vw,18px)}
+  .cell p{margin:2px 0 0; font-size:clamp(13px,1.7vw,15px); color:#6a533f}
+  .win{display:flex; flex-wrap:wrap; gap:16px; align-items:center; font-size:clamp(16px,2.3vw,20px)}
+  .win .cup{font-size:clamp(44px,7vw,64px)}
+  .learn{display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+  .learn li{list-style:none; background:#fff4d9; border-radius:12px; padding:12px 16px; font-size:clamp(14px,1.9vw,17px)}
+  .learn{padding:0; margin:0}
+  footer{text-align:center; margin:26px 0 6px; color:var(--brown); font-size:clamp(13px,1.8vw,16px)}
+  .tip{background:#fff; border:2px solid var(--gold); border-radius:14px; padding:12px 18px; display:inline-block; max-width:760px}
+  @media print{ body{background:#fff} section{box-shadow:none; break-inside:avoid} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <span class="badge">📘 คู่มือเล่นสำหรับนักเรียน</span>
+    <h1>🐷 วางแผนดี ชีวิตมีเงินเก็บ</h1>
+    <div class="goal">🎯 <b>เป้าหมาย:</b> เล่นครบทุกรอบแล้วมี <b>“เงินออม” มากที่สุด</b> และ <b>ไม่มีหนี้</b> = ผู้ชนะ!<br>
+      ไม่ใช่ใครมีเงินสดเยอะสุด แต่คือใคร “วางแผนการเงิน” เก่งที่สุด</div>
+  </header>
+
+  <section>
+    <h2><span class="n">1</span> เข้าเล่นยังไง</h2>
+    <div class="steps">
+      <div class="step"><div class="big">🖥️</div><h3>ครูสร้างห้อง</h3><p>ครูเปิดลิงก์เกม กด “สร้างห้องออนไลน์” แล้วฉายจอขึ้นโปรเจกเตอร์</p></div>
+      <div class="step"><div class="big">📱</div><h3>นักเรียนสแกน QR</h3><p>ทุกคนใช้มือถือสแกน QR บนจอ (หรือเปิดลิงก์ห้อง) แล้วใส่ชื่อเข้าร่วม</p></div>
+      <div class="step"><div class="big">🎲</div><h3>เริ่มเล่น</h3><p>ครูกด “เริ่มเกม” ทุกคนได้เงินตั้งต้นคนละ <b>5,000 บาท</b> เท่ากัน</p></div>
+    </div>
+    <div class="modes">
+      <div class="mode a"><h3>🏫 โหมดทั้งห้อง (2–50 คน)</h3>ทุกคนทอยลูกเต๋า <b>พร้อมกัน</b> ในแต่ละรอบ (มีเวลาทอย 20 วิ / ตอบคำถาม 40 วิ) ครูเป็นจอมอนิเตอร์ดูภาพรวม เหมาะเล่นทั้งห้อง</div>
+      <div class="mode b"><h3>🎲 โหมดกลุ่มเล็ก (2–6 คน)</h3>ผลัดกันทอยทีละคน เห็นกระดานชัด เหมาะกลุ่มย่อยหรือเล่นกันในบ้าน</div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">2</span> เล่นยังไง (แต่ละตา)</h2>
+    <div class="steps">
+      <div class="step"><div class="big">🎲</div><h3>ทอยลูกเต๋า</h3><p>ทอยแล้วเดินตามแต้มที่ได้ไปตามช่องบนกระดาน</p></div>
+      <div class="step"><div class="big">📍</div><h3>ทำตามช่องที่หยุด</h3><p>ได้เงิน / จ่ายเงิน / ตอบคำถาม / เจอเหตุการณ์ ตามช่องนั้น</p></div>
+      <div class="step"><div class="big">🐷</div><h3>เลือกออม</h3><p>เมื่อได้รายรับ ตัดสินใจว่าจะ “แบ่งเข้าเงินออม” เท่าไหร่</p></div>
+      <div class="step"><div class="big">🔁</div><h3>ครบรอบบอร์ด</h3><p>เดินผ่าน START รับ <b>ดอกเบี้ยเงินออม 10%</b> — ยิ่งออมยิ่งได้!</p></div>
+    </div>
+    <p style="margin:14px 0 0;font-size:clamp(14px,1.9vw,17px);color:#6a533f">
+      💡 ถ้าเงินสดไม่พอจ่าย ต้อง <b>ถอนเงินออม</b> โดยเสียค่าธรรมเนียม 10% — ถ้ายังไม่พออีกจะ <b>เป็นหนี้</b> (หนี้ทำให้เสียเปรียบตอนตัดสินผู้ชนะ)</p>
+  </section>
+
+  <section>
+    <h2><span class="n">3</span> ช่องบนกระดานมีอะไรบ้าง</h2>
+    <div class="cells">
+      <div class="cell"><div class="ic">🚩</div><div><b>START</b><p>จุดเริ่ม เดินครบรอบได้ดอกเบี้ยเงินออม</p></div></div>
+      <div class="cell"><div class="ic">💵</div><div><b>รายรับ</b><p>ได้เงินเข้ามา เลือกแบ่งไปออมได้</p></div></div>
+      <div class="cell"><div class="ic">🐷</div><div><b>การออม</b><p>เก็บเงินเข้า “เงินออม” เพื่ออนาคต</p></div></div>
+      <div class="cell"><div class="ic">📈</div><div><b>การลงทุน</b><p>ลงเงินเสี่ยงโชค ได้กำไรหรือขาดทุน</p></div></div>
+      <div class="cell"><div class="ic">📖</div><div><b>ความรู้</b><p>ตอบคำถามการเงินถูก รับโบนัสเข้าเงินออม</p></div></div>
+      <div class="cell"><div class="ic">❓</div><div><b>เหตุการณ์</b><p>สุ่มเรื่องดีหรือร้ายในชีวิตจริง</p></div></div>
+      <div class="cell"><div class="ic">🎁</div><div><b>โอกาส</b><p>การ์ดโอกาสพิเศษ ลุ้นรางวัล/ข้อเสนอ</p></div></div>
+      <div class="cell"><div class="ic">🛡️</div><div><b>เงินสำรองฉุกเฉิน</b><p>ได้ “โล่” กันเหตุการณ์ร้าย 1 ครั้ง</p></div></div>
+      <div class="cell"><div class="ic">💸</div><div><b>รายจ่าย</b><p>ค่าใช้จ่ายจำเป็น/ฟุ่มเฟือย ต้องจ่ายเงิน</p></div></div>
+      <div class="cell"><div class="ic">⚫</div><div><b>ตัวหมากปริศนา</b><p>NPC เดินป่วนบนกระดาน ใครเจอลุ้นได้ทั้งดีและร้าย</p></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">4</span> ใครเป็นผู้ชนะ</h2>
+    <div class="win">
+      <div class="cup">🏆</div>
+      <div>พอครบทุกรอบ เกมจะจัดอันดับจาก <b>เงินออม</b> มากไปน้อย โดย <b>คนไม่มีหนี้อยู่เหนือคนมีหนี้</b> เสมอ<br>
+      → เก่งการเงิน = ออมสม่ำเสมอ + เตรียมเงินสำรอง + ไม่ก่อหนี้ฟุ่มเฟือย</div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">5</span> เกมนี้สอนอะไร</h2>
+    <ul class="learn">
+      <li>💰 <b>ออมก่อนใช้</b> — กันเงินออมทันทีที่มีรายรับ</li>
+      <li>🛡️ <b>มีเงินสำรองฉุกเฉิน</b> — กันเหตุไม่คาดฝัน</li>
+      <li>⚖️ <b>แยกความจำเป็นกับความอยาก</b> — คิดก่อนซื้อ</li>
+      <li>📈 <b>การลงทุนมีความเสี่ยง</b> — ผลตอบแทนสูงมักเสี่ยงสูง</li>
+      <li>🚫 <b>รู้ทันกลโกง</b> — OTP, ร้านหลอกโอน, พนัน/รวยเร็ว</li>
+      <li>🧾 <b>วางแผน &amp; จดบัญชี</b> — รู้ว่าเงินไปไหน</li>
+    </ul>
+  </section>
+
+  <footer>
+    <div class="tip">👩‍🏫 <b>ทิปครู:</b> เปิดลิงก์เกมทิ้งไว้ก่อนคาบ ~1 นาที ให้เซิร์ฟเวอร์พร้อม แล้วใช้จังหวะ “เฉลย + คำอธิบาย” ของแต่ละคำถามเป็นช่วงสอนสั้น ๆ ได้เลย</div>
+  </footer>
+
+</div>
+</body>
+</html>
