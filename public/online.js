@@ -954,11 +954,13 @@ function ensureClassSkeleton(v) {
       <button class="primary cls-croll" id="cls-croll"></button>
     </div>`);
   } else {
-    // จอมอนิเตอร์: กระดานภาพรวมทุกตัวเดิน + พาเนลสถิติ/อันดับ
+    // จอมอนิเตอร์: กระดานภาพรวมทุกตัวเดิน + พาเนลสถิติ/อันดับ (บนคอม: กระดานซ้าย อันดับขวา)
     root.innerHTML = `<div class="cls-wrap">${timebar}
       <div class="hint" style="text-align:center">${STR.monitorTitle} — ${STR.monBoardHint}</div>
-      <div class="board cls-board-visual" id="cls-board-host"></div>
-      <div id="cls-panel"></div></div>`;
+      <div class="mon-row">
+        <div class="board cls-board-visual" id="cls-board-host"></div>
+        <div id="cls-panel"></div>
+      </div></div>`;
     buildBoard($("#cls-board-host"), "", `<div class="center-ui"><div class="cls-cturn" id="cls-cturn"></div></div>`);
   }
 }

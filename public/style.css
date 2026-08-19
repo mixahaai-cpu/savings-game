@@ -393,6 +393,18 @@ td.neg { color: var(--red); font-weight: 700; }
 .cls-money .debt { color: var(--red); }
 .cls-board { display: flex; flex-direction: column; gap: 4px; max-height: 46dvh; overflow-y: auto; }
 .mon-rank { max-height: 60dvh; }
+
+/* จอมอนิเตอร์ (ครู/เจ้าของห้อง) บนคอม/โปรเจกเตอร์: กว้างขึ้น + กระดานซ้าย อันดับขวา ใกล้กระดาน */
+#class-screen[data-cls="spectator"] .cls-wrap { width: min(1180px, 100%); }
+.mon-row { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 16px; align-items: start; }
+.mon-row .cls-board-visual { margin-top: 0; }
+.mon-row #cls-panel { display: flex; flex-direction: column; gap: 10px; }
+.mon-row .mon-rank { max-height: 74dvh; }
+@media (max-width: 820px) {
+  #class-screen[data-cls="spectator"] .cls-wrap { width: min(560px, 100%); }
+  .mon-row { grid-template-columns: 1fr; }
+  .mon-row .mon-rank { max-height: 55dvh; }
+}
 .mon-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px; font-weight: 700; font-size: .95em; }
 .mon-stats > div { background: var(--cream-2); border-radius: 8px; padding: 4px 8px; }
 .mon-rank .cls-bname .hint { font-weight: 400; }
