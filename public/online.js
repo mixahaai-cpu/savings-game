@@ -87,6 +87,8 @@ function setupChrome(send) {
   $("#btn-restart").onclick = hostResetFlow;
   const stopBtn = $("#btn-stop");
   if (stopBtn) { stopBtn.textContent = STR.hostStop; stopBtn.onclick = hostStopFlow; }
+  const pauseBtn = $("#btn-pause");
+  if (pauseBtn) pauseBtn.onclick = () => { const v = cur && cur.view; window.__sendAction({ type: v && v.paused ? "resume" : "pause" }); };
   $("#btn-claim").title = STR.claimHost;
   $("#btn-claim").onclick = claimHostFlow;
   const sb = $("#btn-sound");
@@ -190,8 +192,17 @@ function showBigQr() {
 }
 
 /* ---------------- เรนเดอร์จาก state ---------------- */
+function showPausedBanner(on) {
+  let el = document.getElementById("paused-banner");
+  if (on) {
+    if (!el) { el = document.createElement("div"); el.id = "paused-banner"; el.textContent = STR.pausedBanner; document.body.appendChild(el); }
+    el.style.display = "";
+  } else if (el) { el.style.display = "none"; }
+}
+
 async function renderState(s) {
   cur = s;
+  showPausedBanner(s.view && s.view.paused);
   if (s.status === "waiting" || !s.view) { clsPrevPhase = ""; bgmStop(); renderWaiting(s); return; }
   const v = s.view;
   applySoundRole(v);
@@ -491,10 +502,12 @@ function renderHud(v) {
   const tl = $("#turn-label");
   if (tl) tl.textContent = !meSat ? "👀 ผู้ชม — " + STR.onlineTurnOf(turnName) : myTurn ? "🎯 " + STR.onlineYourTurn : STR.onlineTurnOf(turnName);
   const rb = $("#roll-btn");
-  if (rb) rb.disabled = !(meSat && myTurn && !v.pending);
+  if (rb) rb.disabled = !(meSat && myTurn && !v.pending) || v.paused;
   $("#btn-restart").classList.toggle("hidden", v.hostId !== v.me);
   const sBtn = $("#btn-stop");
   if (sBtn) sBtn.classList.toggle("hidden", v.hostId !== v.me);
+  const pBtn = $("#btn-pause");
+  if (pBtn) { pBtn.classList.toggle("hidden", v.hostId !== v.me); pBtn.textContent = v.paused ? STR.hostResume : STR.hostPause; }
   $("#btn-claim").classList.toggle("hidden", !(meSat && v.hostId !== v.me));
 }
 
@@ -714,7 +727,8 @@ function classAutoAct(v) {
 }
 
 function classTickSetup(v) {
-  const key = v.round + ":" + v.stage;
+  // รวม stageDeadline ในคีย์ → ตอนกด "เล่นต่อ" (deadline ถูกเลื่อน) จะคำนวณเวลาที่เหลือใหม่
+  const key = v.round + ":" + v.stage + ":" + v.stageDeadline;
   if (key === clsStageKey) return;
   clsStageKey = key;
   clsAutoDone = false;
@@ -732,6 +746,7 @@ function classTickSetup(v) {
     if (num) num.textContent = Math.ceil(shown / 1000);
     const vv = cur && cur.view;
     if (!vv || vv.phase !== "cplay") { clearInterval(clsTimer); return; }
+    if (vv.paused) { if (num) num.textContent = "⏸"; return; } // พักอยู่: แช่แข็ง ไม่ auto/force
     if (shown <= 0 && !clsAutoDone) { clsAutoDone = true; classAutoAct(vv); }
     if (left <= -800 && !clsForceDone) {
       const incomplete = vv.stage === "roll" ? vv.waiting.rolled < vv.waiting.total : vv.waiting.undecided > 0;
@@ -981,10 +996,13 @@ function updateClassTop(v) {
     <span class="round-chip">${STR.classRound(Math.min(v.round, v.rounds), v.rounds)}</span>
     <span class="cls-stage">${v.stage === "roll" ? "🎲 " + STR.classStageRoll : "🤔 " + STR.classStageRespond}</span>
     <button id="cls-sound" title="เปิด/ปิดเสียง">${soundBtnLabel()}</button>
+    ${isHost ? `<button id="cls-pause" title="${v.paused ? STR.hostResume : STR.hostPause}">${v.paused ? "▶" : "⏸"}</button>` : ""}
     ${isHost ? `<button id="cls-stop" title="${STR.hostStop}">🏁</button>` : ""}
     ${isHost ? `<button id="cls-reset" title="${STR.hostReset}">🔄</button>` : ""}
     <button id="cls-leave">${STR.onlineLeave}</button>`;
   $("#cls-sound").onclick = () => { toggleMuted(); $("#cls-sound").textContent = soundBtnLabel(); if (!isMuted()) sfx("popup"); };
+  const pau = $("#cls-pause");
+  if (pau) pau.onclick = () => window.__sendAction({ type: v.paused ? "resume" : "pause" });
   const stp = $("#cls-stop");
   if (stp) stp.onclick = hostStopFlow;
   const rst = $("#cls-reset");
@@ -1007,7 +1025,7 @@ function updateClassBoard(v) {
   const rolledThisRound = me.lastRoll && me.lastRoll.r === v.round;
   const sentThisRound = clsRolledSentRound === v.round;
 
-  if (v.stage === "roll" && !v.myRolled && !sentThisRound) {
+  if (v.stage === "roll" && !v.myRolled && !sentThisRound && !v.paused) {
     if (croll) {
       croll.style.display = "";
       croll.textContent = STR.classRollNow;

@@ -618,6 +618,8 @@ export function setup(players) {
     black: { active: false, pos: 0 }, // ตัวหมากปริศนา
     blackSpawnRound: 0,
     blackEvent: null,
+    paused: false,            // หัวหน้าห้องหยุดชั่วคราว (แช่แข็งเวลา + บล็อกการเล่น)
+    pausedAt: 0,
   };
 }
 
@@ -641,6 +643,9 @@ export function validateAction(state, playerId, action) {
   const inRoster = state.roster.some((r) => r.id === playerId);
   const host = hostOf(state);
   const isClass = state.mode === "class";
+  // เกมพักชั่วคราว: บล็อกทุกการเล่น (เหลือแค่ resume/หยุดเกม/ออก/รับตำแหน่ง)
+  if (state.paused && ["roll", "croll", "cforce", "alloc", "answer", "invest", "choice"].includes(action.type))
+    return no("เกมพักชั่วคราวอยู่ — รอหัวหน้าห้องกดเล่นต่อ");
   switch (action.type) {
     case "sit": {
       if (state.phase !== "lobby") return no("เกมเริ่มไปแล้ว รอรอบหน้านะ");
@@ -673,6 +678,15 @@ export function validateAction(state, playerId, action) {
     case "stop":
       if (playerId !== host) return no("หัวหน้าห้องเท่านั้นที่หยุดเกมได้");
       if (state.phase !== "play" && state.phase !== "cplay") return no("เกมยังไม่เริ่ม");
+      return { ok: true };
+    case "pause":
+      if (playerId !== host) return no("หัวหน้าห้องเท่านั้นที่พักเกมได้");
+      if (state.phase !== "play" && state.phase !== "cplay") return no("เกมยังไม่เริ่ม");
+      if (state.paused) return no("พักอยู่แล้ว");
+      return { ok: true };
+    case "resume":
+      if (playerId !== host) return no("หัวหน้าห้องเท่านั้นที่สั่งเล่นต่อได้");
+      if (!state.paused) return no("ไม่ได้พักอยู่");
       return { ok: true };
     case "kick":
       if (state.phase !== "lobby") return no("เชิญออกได้เฉพาะในล็อบบี้");
@@ -769,6 +783,23 @@ export function applyAction(state, playerId, action) {
       // หัวหน้าหยุดเกมกลางคัน → จบทันที จัดอันดับจากสถานะปัจจุบัน
       finishGame(s);
       s.stage = null;
+      s.seq++;
+      return s;
+    }
+    case "pause": {
+      // หยุดชั่วคราว — จำเวลาที่พัก เพื่อคืนเวลาที่เหลือตอนเล่นต่อ
+      s.paused = true;
+      s.pausedAt = Date.now();
+      s.seq++;
+      return s;
+    }
+    case "resume": {
+      if (s.paused) {
+        // เลื่อน deadline ไปข้างหน้าเท่าเวลาที่พัก → นักเรียนได้เวลาที่เหลือคืนเต็ม
+        if (s.phase === "cplay" && s.stageDeadline) s.stageDeadline += Date.now() - (s.pausedAt || Date.now());
+        s.paused = false;
+        s.pausedAt = 0;
+      }
       s.seq++;
       return s;
     }
@@ -895,6 +926,7 @@ export function viewFor(state, playerId) {
       stage: state.stage,
       stageDeadline: state.stageDeadline,
       now: Date.now(),
+      paused: !!state.paused,
       seq: state.seq,
       waiting: {
         rolled: Object.keys(state.rolls).length,
@@ -940,5 +972,6 @@ export function viewFor(state, playerId) {
   v.turnId = v.phase === "play" ? v.roster[v.turnIdx].id : null;
   v.blackPos = state.black && state.black.active ? state.black.pos : null; // ตำแหน่งตัวหมาก (ผลัดตา)
   delete v.black; delete v.blackSpawnRound; // internal — client ใช้ blackPos/blackEvent
+  delete v.pausedAt; // internal — client ใช้แค่ paused (boolean)
   return v;
 }
