@@ -752,6 +752,9 @@ function init() {
   $("#btn-continue").textContent = "▶ " + STR.menuContinue;
   $("#btn-how").textContent = STR.menuHow;
   $("#btn-stats").textContent = STR.menuStats;
+  $("#btn-credits").textContent = STR.menuCredits;
+  const foot = $("#menu-credit-foot");
+  if (foot) foot.textContent = STR.credits.org + " • " + STR.credits.major;
 
   $("#btn-new").addEventListener("click", () => { renderSetup(); showScreen("setup"); });
   $("#btn-online").addEventListener("click", () => {
@@ -770,6 +773,7 @@ function init() {
   $("#btn-how").addEventListener("click", () =>
     infoModal("📘", STR.howTitle, `<div class="note" style="text-align:left">${STR.howText.join("<br><br>")}</div>`, STR.close));
   $("#btn-stats").addEventListener("click", openStats);
+  $("#btn-credits").addEventListener("click", () => UI.showCredits(STR.credits, STR.close));
 
   $("#btn-ledger").textContent = "📒 " + STR.ledger;
   $("#btn-ledger").addEventListener("click", openLedger);

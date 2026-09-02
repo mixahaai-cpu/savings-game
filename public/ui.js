@@ -40,6 +40,17 @@ export function showModal({ icon, title, bodyHTML, buttons, buildBody }) {
 export const infoModal = (icon, title, bodyHTML, btnLabel = "ไปต่อ") =>
   showModal({ icon, title, bodyHTML, buttons: [{ label: btnLabel, cls: "primary", value: true }] });
 
+// หน้าผู้จัดทำ (รายชื่อคณะผู้จัดทำ) — ใช้ได้ทั้งเมนูเครื่องเดียวและล็อบบี้ออนไลน์
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+export function showCredits(credits, closeLabel = "ปิด") {
+  const rows = credits.people.map((p, i) =>
+    `<div class="credit-row"><span class="credit-no">${i + 1}</span><span class="credit-name">${esc(p.name)}</span>${p.id ? `<span class="credit-id">${esc(p.id)}</span>` : ""}</div>`
+  ).join("");
+  const body = `<div class="credit-org"><b>${esc(credits.org)}</b><div class="hint">${esc(credits.major || "")}</div></div>
+    <div class="credit-list">${rows}</div>`;
+  return showModal({ icon: "👥", title: "คณะผู้จัดทำ", bodyHTML: body, buttons: [{ label: closeLabel, cls: "primary", value: true }] });
+}
+
 export function toast(msg, ms = 1800) {
   let t = $(".toast");
   if (!t) { t = document.createElement("div"); t.className = "toast"; document.body.appendChild(t); }

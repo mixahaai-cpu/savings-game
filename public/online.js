@@ -2,7 +2,7 @@
 // โปรโตคอล: ส่ง {join|action|reset} รับ {state|error} — ห้ามสะสม state ฝั่ง client
 import { STR } from "./strings.js";
 import { PLAYER_COLORS, BOARD } from "./data.js";
-import { fmt, $, showModal, toast, buildBoard, placePawns, animateMove, animateDice, animateDiceEl } from "./ui.js";
+import { fmt, $, showModal, showCredits, toast, buildBoard, placePawns, animateMove, animateDice, animateDiceEl } from "./ui.js";
 import { qrSvg } from "./qr.js";
 import { installSoundUnlock, setSoundRole, isMuted, toggleMuted, sfx, bgmStart, bgmStop } from "./sound.js";
 import { addBot, clearBots, botCount } from "./botclient.js";
@@ -299,7 +299,12 @@ function renderLobby(s) {
 
   // ลิงก์หน้าอธิบายเกม (เปิดแท็บใหม่) — ครู/นักเรียนอ่านวิธีเล่นก่อนเริ่ม
   box.insertAdjacentHTML("beforeend",
-    `<a href="./howto.html" target="_blank" rel="noopener" style="display:inline-block;margin-bottom:10px;padding:7px 14px;border-radius:999px;background:var(--pink,#f8c7cf);color:var(--red,#d95d4e);font-weight:700;text-decoration:none">📘 ${STR.menuHow} — เปิดหน้าอธิบายเกม</a>`);
+    `<div style="margin-bottom:10px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
+      <a href="./howto.html" target="_blank" rel="noopener" style="display:inline-block;padding:7px 14px;border-radius:999px;background:var(--pink,#f8c7cf);color:var(--red,#d95d4e);font-weight:700;text-decoration:none">📘 ${STR.menuHow}</a>
+      <button id="lobby-credits" style="padding:7px 14px;border-radius:999px;border:none;background:var(--sky,#bfe0f5);color:var(--brown,#7a5c43);font-weight:700;cursor:pointer">${STR.menuCredits}</button>
+    </div>`);
+  const lcb = $("#lobby-credits");
+  if (lcb) lcb.onclick = () => showCredits(STR.credits, STR.close);
 
   // ห้องออนไลน์ = โหมด "ทั้งห้องพร้อมกัน" เสมอ (ทุกคนทอยพร้อมกัน รับได้ถึง 120 คน)
   // ตัดปุ่มเลือกโหมดผลัดตาออกจากห้องออนไลน์ กันครูเผลอเลือกผิดแล้วช้า + รับได้แค่ 6 คน

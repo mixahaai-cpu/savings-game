@@ -415,6 +415,17 @@ td.neg { color: var(--red); font-weight: 700; }
   animation: pausePulse 1.6s ease-in-out infinite;
 }
 @keyframes pausePulse { 0%, 100% { opacity: 1; } 50% { opacity: .78; } }
+
+/* คณะผู้จัดทำ */
+.menu-credit-foot { margin-top: 14px; font-size: 12.5px; color: var(--brown-soft); text-align: center; opacity: .95; }
+.credit-org { text-align: center; margin-bottom: 12px; }
+.credit-org b { font-size: 1.08em; color: var(--brown); }
+.credit-list { display: grid; grid-template-columns: 1fr 1fr; gap: 5px 12px; text-align: left; max-height: 56dvh; overflow-y: auto; }
+.credit-row { display: flex; align-items: baseline; gap: 6px; background: var(--cream-2); border-radius: 8px; padding: 5px 9px; }
+.credit-no { font-weight: 800; color: var(--gold-deep); min-width: 1.5em; text-align: right; }
+.credit-name { font-weight: 600; }
+.credit-id { margin-left: auto; font-size: .76em; color: var(--brown-soft); white-space: nowrap; }
+@media (max-width: 560px) { .credit-list { grid-template-columns: 1fr; max-height: 62dvh; } }
 .mon-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px; font-weight: 700; font-size: .95em; }
 .mon-stats > div { background: var(--cream-2); border-radius: 8px; padding: 4px 8px; }
 .mon-rank .cls-bname .hint { font-weight: 400; }
