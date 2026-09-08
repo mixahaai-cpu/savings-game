@@ -74,17 +74,25 @@ function broadcast(room) {
   const s = room.state;
   for (const [ws, pid] of room.clients) {
     if (ws.readyState !== ws.OPEN) continue;
-    let view = null;
-    try { view = game.viewFor(s, pid); } catch (e) { continue; }
-    ws.send(JSON.stringify({ type: "state", status: "playing", view }));
+    const msg = stateMsg(s, pid);
+    if (msg) ws.send(msg);
   }
+}
+
+// สร้างข้อความ state — เกมจบส่ง status "over" + result (client ใช้เปิดจอจบเกม/อันดับ)
+function stateMsg(s, pid) {
+  let view;
+  try { view = game.viewFor(s, pid); } catch (e) { return null; }
+  const over = s.phase === "done";
+  let result = null;
+  if (over) { try { result = game.isGameOver(s); } catch (e) { /* ignore */ } }
+  return JSON.stringify({ type: "state", status: over ? "over" : "playing", result, view });
 }
 
 function sendState(ws, room) {
   if (ws.readyState !== ws.OPEN) return;
-  let view = null;
-  try { view = game.viewFor(room.state, ws.__pid); } catch (e) { return; }
-  ws.send(JSON.stringify({ type: "state", status: "playing", view }));
+  const msg = stateMsg(room.state, ws.__pid);
+  if (msg) ws.send(msg);
 }
 
 function sendError(ws, msg) {
