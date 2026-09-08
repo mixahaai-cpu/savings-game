@@ -215,6 +215,7 @@ function pushLast(s, pid, items, extra) {
 }
 function finishGame(s) {
   s.phase = "done";
+  s.finishedAt = Date.now();
   // ranking เก็บเฉพาะฟิลด์สรุป (ไม่ copy lastText/lastCard/lastQuiz — กัน state ซ้ำซ้อนในห้องใหญ่)
   s.ranking = s.roster
     .map((r) => {
@@ -445,8 +446,13 @@ function decide(s, pid, pend, action) {
     const Q = QUIZ[pend.qi];
     p.quizAll++;
     const ok = action.i === Q.a;
+    // สถิติรายข้อ (ไว้ export วิเคราะห์ว่าข้อไหนตอบผิดเยอะ)
+    if (!s.quizStats) s.quizStats = {};
+    const qs = s.quizStats[pend.qi] || (s.quizStats[pend.qi] = { asked: 0, correct: 0 });
+    qs.asked++;
     if (ok) {
       p.quizOk++;
+      qs.correct++;
       gainSavings(s, pid, pend.reward, "โบนัสความรู้ (เข้าเงินออม)");
       items.push({ icon: "🎉", text: `ตอบถูก! รับ ${fm(pend.reward)} บาทเข้าเงินออม` });
     } else {
@@ -584,6 +590,8 @@ export function setup(players) {
     last: null,
     lastMove: null,
     ledger: [],
+    quizStats: {},            // qi -> {asked, correct} สำหรับสถิติรายข้อ
+    startedAt: 0, finishedAt: 0,
     black: { active: false, pos: 0 }, // ตัวหมากปริศนา
     blackSpawnRound: 0,
     blackEvent: null,
@@ -789,6 +797,9 @@ export function applyAction(state, playerId, action) {
       s.blackSpawnRound = spawnRoundFor(s.rounds); // ตั้งรอบเกิดของตัวหมากตามความยาวเกม
       s.black = { active: false, pos: 0 };
       s.blackEvent = null;
+      s.quizStats = {};        // เริ่มนับสถิติคำถามใหม่
+      s.startedAt = Date.now();
+      s.finishedAt = 0;
       for (const r of s.roster) {
         s.players[r.id] = {
           pos: 0, cash: RULES.startMoney, savings: 0, debt: 0, shield: false,

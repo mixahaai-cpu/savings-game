@@ -174,6 +174,15 @@ export const STR = {
   ledgerCash: "เงินสด",
   ledgerSavings: "เงินออม",
   exportCsv: "ดาวน์โหลด CSV 📄",
+  exportData: "📊 ข้อมูลวิเคราะห์",
+  dataTitle: "ดาวน์โหลดข้อมูลไว้ทำกราฟ/ตาราง",
+  dataDesc: "เปิดใน Excel / Google Sheets ทำกราฟได้เลย",
+  dataPlayers: "👤 ผลผู้เล่น (CSV)",
+  dataPlayersHint: "อันดับ เงินออม เงินสด หนี้ อัตราตอบถูก — ทำกราฟแท่ง/ตาราง",
+  dataQuestions: "📝 สถิติคำถามรายข้อ (CSV)",
+  dataQuestionsHint: "ข้อไหนตอบถูก/ผิดกี่ % — ดูว่าต้องเน้นสอนเรื่องไหน",
+  dataJson: "🗂️ ข้อมูลทั้งหมด (JSON)",
+  dataJsonHint: "ข้อมูลดิบครบทุกอย่าง (ผู้เล่น+คำถาม+สมุดบัญชี+สรุป)",
   close: "ปิด",
 
   // จบเกม

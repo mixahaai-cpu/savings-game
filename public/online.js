@@ -1,7 +1,7 @@
 // โหมดออนไลน์ — client วาดภาพจาก state ที่เซิร์ฟเวอร์ (logic.js) ส่งมาเท่านั้น
 // โปรโตคอล: ส่ง {join|action|reset} รับ {state|error} — ห้ามสะสม state ฝั่ง client
 import { STR } from "./strings.js";
-import { PLAYER_COLORS, BOARD } from "./data.js";
+import { PLAYER_COLORS, BOARD, QUIZ } from "./data.js";
 import { fmt, $, showModal, showCredits, toast, buildBoard, placePawns, animateMove, animateDice, animateDiceEl } from "./ui.js";
 import { qrSvg } from "./qr.js";
 import { installSoundUnlock, setSoundRole, isMuted, toggleMuted, sfx, bgmStart, bgmStop } from "./sound.js";
@@ -116,6 +116,8 @@ function setupChrome(send) {
   $("#end-ledger").onclick = openLedger;
   $("#end-csv").textContent = STR.exportCsv;
   $("#end-csv").onclick = exportCsv;
+  const edata = $("#end-data");
+  if (edata) { edata.textContent = STR.exportData; edata.onclick = openDataExport; }
   const es = $("#end-stats");
   if (es) { es.textContent = "📊 " + STR.menuStats; es.classList.remove("hidden"); es.onclick = openOnlineStats; }
   addEventListener("resize", () => { if (cur && screenShown() === "game") renderPawnsNow(); });
@@ -690,6 +692,96 @@ function exportCsv() {
   a.download = "บันทึกเกมออมเงิน-ออนไลน์.csv";
   a.click();
   URL.revokeObjectURL(a.href);
+}
+
+/* ---- ดาวน์โหลดข้อมูลตอนจบเกม ไว้ทำกราฟ/ตาราง (CSV/JSON) ---- */
+function dlFile(name, content, mime, bom) {
+  const blob = new Blob([(bom ? "﻿" : "") + content], { type: mime + ";charset=utf-8" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+const csvCell = (x) => `"${String(x).replace(/"/g, '""')}"`;
+function dataStamp() {
+  const v = cur && cur.view;
+  return new Date((v && v.finishedAt) || Date.now()).toISOString().slice(0, 16).replace("T", "_").replace(/:/g, "");
+}
+function playersRows(v) {
+  return (v.ranking || []).map((r, i) => {
+    const net = r.savings + r.cash - r.debt;
+    return { no: i + 1, name: r.name, savings: r.savings, cash: r.cash, debt: r.debt, net,
+      quizOk: r.quizOk, quizAll: r.quizAll, rate: r.quizAll ? Math.round(r.quizOk / r.quizAll * 100) : "", shield: r.shield ? 1 : 0 };
+  });
+}
+function questionRows(v) {
+  const st = v.quizStats || {};
+  return QUIZ.map((Q, i) => {
+    const s = st[i] || { asked: 0, correct: 0 };
+    return { no: i + 1, q: Q.q, answer: "กขคง"[Q.a] + ". " + Q.c[Q.a], asked: s.asked, correct: s.correct,
+      rate: s.asked ? Math.round(s.correct / s.asked * 100) : "" };
+  });
+}
+function exportPlayersCsv() {
+  const v = cur && cur.view; if (!v || !v.ranking) return;
+  const head = "อันดับ,ชื่อ,เงินออม,เงินสด,หนี้,มูลค่าสุทธิ,ตอบถูก,ตอบทั้งหมด,อัตราตอบถูก(%),มีเงินสำรอง";
+  const lines = playersRows(v).map((r) => [r.no, csvCell(r.name), r.savings, r.cash, r.debt, r.net, r.quizOk, r.quizAll, r.rate, r.shield].join(","));
+  dlFile(`ผลผู้เล่น_${dataStamp()}.csv`, head + "\n" + lines.join("\n"), "text/csv", true);
+}
+function exportQuestionsCsv() {
+  const v = cur && cur.view; if (!v) return;
+  const head = "ข้อที่,คำถาม,เฉลย,ตอบทั้งหมด,ตอบถูก,อัตราตอบถูก(%)";
+  const lines = questionRows(v).map((r) => [r.no, csvCell(r.q), csvCell(r.answer), r.asked, r.correct, r.rate].join(","));
+  dlFile(`สถิติคำถาม_${dataStamp()}.csv`, head + "\n" + lines.join("\n"), "text/csv", true);
+}
+function exportJson() {
+  const v = cur && cur.view; if (!v) return;
+  const players = playersRows(v);
+  const savs = players.map((p) => p.savings);
+  const rates = players.filter((p) => p.quizAll).map((p) => p.quizOk / p.quizAll * 100);
+  const sum = (a) => a.reduce((x, y) => x + y, 0);
+  const data = {
+    meta: {
+      วันเวลา: new Date(v.finishedAt || Date.now()).toLocaleString("th-TH"),
+      โหมด: v.mode === "class" ? "ทั้งห้องพร้อมกัน" : "ผลัดตา",
+      จำนวนรอบ: v.rounds,
+      ใช้เวลานาที: v.startedAt && v.finishedAt ? Math.max(1, Math.round((v.finishedAt - v.startedAt) / 60000)) : null,
+    },
+    summary: {
+      ผู้เล่น: players.length,
+      เงินออมเฉลี่ย: players.length ? Math.round(sum(savs) / players.length) : 0,
+      เงินออมสูงสุด: savs.length ? Math.max(...savs) : 0,
+      เงินออมต่ำสุด: savs.length ? Math.min(...savs) : 0,
+      คนมีหนี้: players.filter((p) => p.debt > 0).length,
+      อัตราตอบถูกเฉลี่ย: rates.length ? Math.round(sum(rates) / rates.length) : 0,
+    },
+    players, questions: questionRows(v), ledger: v.ledger || [],
+  };
+  dlFile(`ข้อมูลเกม_${dataStamp()}.json`, JSON.stringify(data, null, 2), "application/json", false);
+}
+function openDataExport() {
+  const v = cur && cur.view; if (!v) return;
+  showModal({
+    icon: "📊", title: STR.dataTitle,
+    bodyHTML: `<div class="note">${STR.dataDesc}</div>`,
+    buildBody: (m) => {
+      const box = document.createElement("div");
+      box.className = "data-export";
+      const mk = (label, hint, fn) => {
+        const b = document.createElement("button");
+        b.className = "data-dl";
+        b.innerHTML = `<b>${label}</b><span class="hint">${hint}</span>`;
+        b.onclick = fn;
+        box.appendChild(b);
+      };
+      mk(STR.dataPlayers, STR.dataPlayersHint, exportPlayersCsv);
+      mk(STR.dataQuestions, STR.dataQuestionsHint, exportQuestionsCsv);
+      mk(STR.dataJson, STR.dataJsonHint, exportJson);
+      m.appendChild(box);
+    },
+    buttons: [{ label: STR.close, cls: "primary", value: true }],
+  });
 }
 
 function escapeHtml(str) {
