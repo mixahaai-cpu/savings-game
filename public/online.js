@@ -116,6 +116,8 @@ function setupChrome(send) {
   $("#end-ledger").onclick = openLedger;
   $("#end-csv").textContent = STR.exportCsv;
   $("#end-csv").onclick = exportCsv;
+  const edash = $("#end-dash");
+  if (edash) { edash.textContent = STR.dashboard; edash.className = "primary"; edash.onclick = openDashboard; }
   const edata = $("#end-data");
   if (edata) { edata.textContent = STR.exportData; edata.onclick = openDataExport; }
   const es = $("#end-stats");
@@ -781,6 +783,58 @@ function openDataExport() {
       m.appendChild(box);
     },
     buttons: [{ label: STR.close, cls: "primary", value: true }],
+  });
+}
+
+/* ---- แดชบอร์ดกราฟสรุป (โชว์กราฟทันทีหลังจบเกม ไม่ต้องเปิด Excel) — วาดด้วย CSS ล้วน ---- */
+function rateClass(r) { return r >= 80 ? "bar-high" : r >= 50 ? "bar-mid" : "bar-low"; }
+function chartRows(items) {
+  return `<div class="chart">` + items.map((it) => `
+    <div class="chart-row">
+      <div class="chart-label" title="${escapeHtml(it.label)}">${escapeHtml(it.label)}</div>
+      <div class="chart-track"><div class="chart-fill ${it.cls || ""}" style="width:${Math.max(0, Math.min(100, it.pct))}%"></div></div>
+      <div class="chart-val">${it.val}</div>
+    </div>`).join("") + `</div>`;
+}
+function openDashboard() {
+  const v = cur && cur.view; if (!v) return;
+  const players = playersRows(v);
+  const questions = questionRows(v);
+  const savs = players.map((p) => p.savings);
+  const rates = players.filter((p) => p.quizAll).map((p) => p.quizOk / p.quizAll * 100);
+  const avg = (a) => a.length ? Math.round(a.reduce((x, y) => x + y, 0) / a.length) : 0;
+  const maxSav = savs.length ? Math.max(...savs, 1) : 1;
+  const inDebt = players.filter((p) => p.debt > 0).length;
+
+  const tiles = [
+    [players.length, "ผู้เล่น"], [fmt(avg(savs)), "เงินออมเฉลี่ย"],
+    [avg(rates) + "%", "ตอบถูกเฉลี่ย"], [inDebt, "คนมีหนี้"],
+  ].map(([n, l]) => `<div class="dash-tile"><b>${n}</b><span>${l}</span></div>`).join("");
+
+  const qRows = questions.map((q) => ({
+    label: "ข้อ " + q.no, pct: q.asked ? q.rate : 0,
+    val: q.asked ? q.rate + "%" : "—", cls: q.asked ? rateClass(q.rate) : "bar-none",
+  }));
+  const topPlayers = [...players].sort((a, b) => b.savings - a.savings).slice(0, 10);
+  const pRows = topPlayers.map((p) => ({ label: p.name, pct: p.savings / maxSav * 100, val: fmt(p.savings), cls: "bar-sav" }));
+
+  const answered = questions.filter((q) => q.asked > 0);
+  const hard = [...answered].sort((a, b) => a.rate - b.rate).filter((q) => q.rate < 60).slice(0, 3);
+  const insight = hard.length
+    ? `<div class="dash-insight">🎯 ควรเน้นสอนเพิ่ม: ${hard.map((q) => "ข้อ " + q.no + " (" + q.rate + "%)").join(", ")}</div>`
+    : (answered.length ? `<div class="dash-insight good">👍 นักเรียนตอบถูกดีทุกข้อที่เจอ</div>` : "");
+
+  showModal({
+    title: STR.dashTitle,
+    buttons: [{ label: STR.close, cls: "primary", value: true }],
+    buildBody: (m) => {
+      m.classList.add("modal-wide");
+      m.insertAdjacentHTML("beforeend", `
+        <div class="dash-tiles">${tiles}</div>
+        <div class="dash-sec"><b>📝 อัตราตอบถูกรายข้อ (ข้อไหนต่ำ = ควรเน้นสอน)</b>${chartRows(qRows)}</div>
+        ${insight}
+        <div class="dash-sec"><b>🐷 เงินออมของผู้เล่น (สูงสุด 10 อันดับ)</b>${chartRows(pRows)}</div>`);
+    },
   });
 }
 

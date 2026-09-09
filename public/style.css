@@ -433,6 +433,29 @@ td.neg { color: var(--red); font-weight: 700; }
 .data-dl:hover { background: #fff4d9; }
 .data-dl b { font-size: 1.05em; color: var(--brown); }
 .data-dl .hint { font-weight: 400; }
+
+/* แดชบอร์ดกราฟสรุป */
+.modal.modal-wide { width: min(780px, 96vw); }
+.dash-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.dash-tile { background: var(--cream-2); border-radius: 12px; padding: 10px 6px; text-align: center; }
+.dash-tile b { display: block; font-size: 1.4em; color: var(--brown); line-height: 1.1; }
+.dash-tile span { font-size: .8em; color: var(--brown-soft); }
+.dash-sec { margin-top: 8px; }
+.dash-sec > b { display: block; margin-bottom: 6px; color: var(--brown); font-size: .98em; }
+.dash-insight { background: #fff4d9; border-radius: 10px; padding: 8px 12px; font-weight: 700; color: var(--gold-deep); font-size: .92em; }
+.dash-insight.good { background: #e2f3d8; color: var(--green-ok); }
+.chart { display: flex; flex-direction: column; gap: 5px; }
+.chart-row { display: grid; grid-template-columns: 96px 1fr 62px; align-items: center; gap: 8px; }
+.chart-label { font-size: .84em; font-weight: 700; color: var(--brown); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chart-track { background: var(--cream-2); border-radius: 999px; height: 18px; overflow: hidden; }
+.chart-fill { height: 100%; border-radius: 999px; transition: width .6s ease; min-width: 3px; }
+.chart-val { font-size: .82em; font-weight: 800; text-align: right; color: var(--brown); }
+.bar-high { background: var(--green-ok); }
+.bar-mid { background: var(--gold); }
+.bar-low { background: var(--red); }
+.bar-none { background: #d5cbbb; }
+.bar-sav { background: var(--teal); }
+@media (max-width: 560px) { .dash-tiles { grid-template-columns: repeat(2, 1fr); } .chart-row { grid-template-columns: 70px 1fr 52px; } }
 .mon-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px; font-weight: 700; font-size: .95em; }
 .mon-stats > div { background: var(--cream-2); border-radius: 8px; padding: 4px 8px; }
 .mon-rank .cls-bname .hint { font-weight: 400; }

@@ -174,6 +174,8 @@ export const STR = {
   ledgerCash: "เงินสด",
   ledgerSavings: "เงินออม",
   exportCsv: "ดาวน์โหลด CSV 📄",
+  dashboard: "📈 ดูกราฟสรุป",
+  dashTitle: "📈 กราฟสรุปผลการเล่น",
   exportData: "📊 ข้อมูลวิเคราะห์",
   dataTitle: "ดาวน์โหลดข้อมูลไว้ทำกราฟ/ตาราง",
   dataDesc: "เปิดใน Excel / Google Sheets ทำกราฟได้เลย",
